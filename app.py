@@ -92,7 +92,7 @@ if modelo is not None:
     map_tue = {"Baixo (Menos de 2h)": 0.0, "Moderado (2h a 4h)": 1.0, "Alto (Mais de 4h)": 2.0}
     map_calc = {"Não consome": 0, "Às vezes": 1, "Frequentemente": 2, "Sempre": 3}
 
-    # Tratamento dummy para meios de transporte (One-Hot Encoding que o modelo espera)
+   # Tratamento dummy para meios de transporte (Corrigido com as maiúsculas exatas do modelo)
     mtrans_public = 1 if mtrans == "Transporte Público" else 0
     mtrans_walking = 1 if mtrans == "Caminhada" else 0
     mtrans_motorbike = 1 if mtrans == "Motocicleta" else 0
@@ -115,10 +115,10 @@ if modelo is not None:
         'FAF': map_faf[faf],
         'TUE': map_tue[tue],
         'CALC': map_calc[calc],
-        'MTRANS_public_transportation': mtrans_public,
-        'MTRANS_walking': mtrans_walking,
-        'MTRANS_motorbike': mtrans_motorbike,
-        'MTRANS_bike': mtrans_bike
+        'MTRANS_Public_Transportation': mtrans_public,
+        'MTRANS_Walking': mtrans_walking,
+        'MTRANS_Motorbike': mtrans_motorbike,
+        'MTRANS_Bike': mtrans_bike
     }
 
     # Convertendo para DataFrame e garantindo a ordem exata das colunas que o modelo exige
