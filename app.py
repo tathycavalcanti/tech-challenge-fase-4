@@ -333,7 +333,7 @@ if modelo is not None:
             with col_kpi1:
                 st.markdown(f"""
                     <div class="kpi-card kpi-card-primeiro">
-                        <div class="kpi-titulo">🥇 Mais Provável</div>
+                        <div class="kpi-titulo">Mais Provável</div>
                         <div class="kpi-valor kpi-valor-lider">{top_3[0][1]:.1f}%</div>
                         <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[0][0]}</div>
                     </div>
@@ -342,7 +342,7 @@ if modelo is not None:
             with col_kpi2:
                 st.markdown(f"""
                     <div class="kpi-card">
-                        <div class="kpi-titulo">🥈 2ª Opção</div>
+                        <div class="kpi-titulo">2ª Opção</div>
                         <div class="kpi-valor">{top_3[1][1]:.1f}%</div>
                         <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[1][0]}</div>
                     </div>
@@ -351,7 +351,7 @@ if modelo is not None:
             with col_kpi3:
                 st.markdown(f"""
                     <div class="kpi-card">
-                        <div class="kpi-titulo">🥉 3ª Opção</div>
+                        <div class="kpi-titulo">3ª Opção</div>
                         <div class="kpi-valor">{top_3[2][1]:.1f}%</div>
                         <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[2][0]}</div>
                     </div>
