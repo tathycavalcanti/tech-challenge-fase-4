@@ -30,15 +30,31 @@ st.markdown("""
         color: #F8F9FA !important;
     }
     
-    /* Caixas de seleção e Inputs */
-    .stSelectbox div[data-baseweb="select"], .stNumberInput div[data-baseweb="input"] {
+    /* CORREÇÃO DAS CAIXAS DE INPUT (Fundo escuro, borda discreta e texto branco) */
+    div[data-baseweb="select"], div[data-baseweb="input"], input {
         background-color: #1A1A1C !important;
         color: #FFFFFF !important;
-        border: 1px solid #333336 !important;
+    }
+
+    /* Garantindo que as bordas fiquem elegantes e o texto legível */
+    .stSelectbox div, .stNumberInput div {
+        background-color: #1A1A1C !important;
+        color: #FFFFFF !important;
+        border-color: #333336 !important;
+    }
+
+    /* Ajuste fino dos textos digitados e selecionados */
+    input[type="number"], div[role="button"], span {
+        color: #FFFFFF !important;
     }
     
-    /* Textos dentro dos inputs */
-    input, div[role="listbox"] {
+    /* Estilização das opções que abrem no dropdown */
+    ul[role="listbox"] li {
+        background-color: #1A1A1C !important;
+        color: #FFFFFF !important;
+    }
+    ul[role="listbox"] li:hover {
+        background-color: #ED145B !important; /* Destaque rosa ao passar o mouse */
         color: #FFFFFF !important;
     }
 
