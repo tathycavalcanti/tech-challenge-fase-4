@@ -269,48 +269,90 @@ if modelo is not None:
             
             # Alertas estilizados para combinar com o fundo escuro
             if status == 'success':
-                st.success(f"**Resultado:** {resultado_texto} (Confiança: {confianca:.2f}%)")
+                st.success(f"**Resultado Principal:** {resultado_texto} (Confiança: {confianca:.2f}%)")
             elif status == 'warning':
-                st.warning(f"**Resultado:** {resultado_texto} (Confiança: {confianca:.2f}%)")
+                st.warning(f"**Resultado Principal:** {resultado_texto} (Confiança: {confianca:.2f}%)")
             else:
-                st.error(f"**Resultado:** {resultado_texto} (Confiança: {confianca:.2f}%)")
+                st.error(f"**Resultado Principal:** {resultado_texto} (Confiança: {confianca:.2f}%)")
 
             st.write(orientacao)
             
-            # GRAFICO LIMPO E PERSONALIZADO (Estilo FIAP)
-            st.markdown("##### Probabilidades por Categoria:")
+            # ==========================================
+            # 📊 SEÇÃO DE KPIs: OS 3 RESULTADOS MAIS PROVÁVEIS
+            # ==========================================
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("##### 🔍 Top 3 Probabilidades Clínicas:")
+
             classes_nomes = [dicionario_classes[c][0] for c in modelo.classes_]
             
-            # Criando o dataframe para o plot
-            chart_data = pd.DataFrame({
+            # Criando e ordenando o ranking das probabilidades
+            df_prob = pd.DataFrame({
                 'Categoria': classes_nomes,
-                'Probabilidade (%)': np.round(probabilidades * 100, 1)
-            }).sort_values(by='Probabilidade (%)', ascending=True)
+                'Probabilidade': probabilidades * 100
+            }).sort_values(by='Probabilidade', ascending=False)
 
-            # Criando o gráfico direto via Matplotlib para controle cirúrgico dos elementos visuais
-            import matplotlib.pyplot as plt
-            fig, ax = plt.subplots(figsize=(10, 4.5))
-            fig.patch.set_facecolor('#0B0B0C') # Cor de fundo da figura igual à do Streamlit
-            ax.set_facecolor('#0B0B0C')
+            # Selecionamos os 3 maiores resultados
+            top_3 = df_prob.head(3).values
 
-            cores_barras = ['#ED145B' if cat == resultado_texto else '#2D2D30' for cat in chart_data['Categoria']]
-            
-            barras = ax.barh(chart_data['Categoria'], chart_data['Probabilidade (%)'], color=cores_barras, edgecolor='none', height=0.6)
-            
-            # Adicionando os rótulos de % ao lado de cada barra
-            for barra in barras:
-                width = barra.get_width()
-                if width > 1.0:
-                    ax.text(width + 1.0, barra.get_y() + barra.get_height()/2, f'{width:.1f}%', 
-                            va='center', ha='left', color='#FFFFFF', fontweight='bold', fontsize=9)
+            # Criando 3 colunas lado a lado para os KPIs
+            col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
 
-            # Limpando a grade, bordas e títulos indesejados
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-            ax.spines['bottom'].set_visible(False)
-            ax.spines['left'].set_visible(False)
-            ax.get_xaxis().set_visible(False) # Esconde o eixo X e suas linhas de grade
-            ax.tick_params(axis='y', colors='#FFFFFF', labelsize=10, length=0) # Mantém apenas os rótulos do Y brancos, sem traços de marcação
+            # Estilização CSS para os cartões de KPI (Fundo grafite escuro e borda de destaque)
+            css_kpi = """
+            <style>
+            .kpi-card {
+                background-color: #1A1A1C;
+                border: 1px solid #333336;
+                border-radius: 8px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            }
+            .kpi-card-primeiro {
+                border: 1px solid #ED145B !important; /* Destaque no líder */
+            }
+            .kpi-titulo {
+                font-size: 14px;
+                color: #8E8E93;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+            }
+            .kpi-valor {
+                font-size: 28px;
+                font-weight: bold;
+                color: #FFFFFF;
+            }
+            .kpi-valor-lider {
+                color: #ED145B !important; /* Rosa/Magenta FIAP para o principal */
+            }
+            </style>
+            """
+            st.markdown(css_kpi, unsafe_allow_html=True)
 
-            plt.tight_layout()
-            st.pyplot(fig)
+            with col_kpi1:
+                st.markdown(f"""
+                    <div class="kpi-card kpi-card-primeiro">
+                        <div class="kpi-titulo">🥇 Mais Provável</div>
+                        <div class="kpi-valor kpi-valor-lider">{top_3[0][1]:.1f}%</div>
+                        <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[0][0]}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            with col_kpi2:
+                st.markdown(f"""
+                    <div class="kpi-card">
+                        <div class="kpi-titulo">🥈 2ª Opção</div>
+                        <div class="kpi-valor">{top_3[1][1]:.1f}%</div>
+                        <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[1][0]}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            with col_kpi3:
+                st.markdown(f"""
+                    <div class="kpi-card">
+                        <div class="kpi-titulo">🥉 3ª Opção</div>
+                        <div class="kpi-valor">{top_3[2][1]:.1f}%</div>
+                        <div style="color: #FFFFFF; font-weight: 500; margin-top: 5px;">{top_3[2][0]}</div>
+                    </div>
+                """, unsafe_allow_html=True)
